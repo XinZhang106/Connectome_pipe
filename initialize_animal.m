@@ -51,7 +51,10 @@ make_if_notexist(rspd);
 
 recon = fullfile(animal_fd, 'retina_recon');
 make_if_notexist(recon);
-fprintf('Folders prepared for all processes! Happy processing!\n')
+fprintf('Folders prepared for all processes! Happy processing!\n');
+
+plotfd = fullfile(animal_fd, 'visualizer');
+make_if_notexist(plotfd);
 
 sucess = 1;
 end

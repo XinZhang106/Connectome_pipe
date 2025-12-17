@@ -1,0 +1,99 @@
+function animal_sum = retina_confocal_upload(animal_id, user, z_step, scope_name, types_channel)
+%UNTITLED4 Summary of this function goes here
+%upload the RGC confocal images to the DJ sln_image and link to a newly created cell by using the function sln_image.loadFolder
+%also save a mini Z stack preview to the folder visualizer for future plotting.
+arguments
+    %this is the defualt setting of confocal RGC imaging, if anything is changed, variables need to be specified
+    animal_id 
+    user = 'Xin'
+    z_step = 0.225
+    scope_name ='Confocal_B'
+    types_channel  = {3, 2}
+end
+
+
+%loading mat file of the animal summary
+confocal_fd = fullfile("D:\localData\trace_pipe_DJ", string(animal_id), 'retina_confocal');
+filename = sprintf('%d_sum.mat', animal_id);
+animal_sum = load(fullfile(confocal_fd, filename));
+
+img_num = numel(dir(confocal_fd));
+%animal_sum.cfc_localid = linspace(1, img_num, img_num);
+if (isfield(animal_sum, 'confocal_imid') && isfield(animal_sum, 'cell_id_list'))
+    if (numel(animal_sum.confocal_imid)==img_num && numel(animal_sum.cell_id_list) == img_num)
+        fprintf('All images have been uploaded and cell ids accounted for... exiting the script now.\n');
+        disp(animal_sum.confocal_imid);
+        disp(animal_sum.cell_id_list);
+        return
+    else
+        fprintf('Images are partially uploaded. Uploading the rest and fill cell ids...\n');
+        % todo 
+        for i = 1:numel(animal_sum.confocal_imid)
+
+            %try search to confirm upload and filling cell id too
+        end
+        
+        %upload the rest
+        for i = 1+numel(animal_sum.confocal_imid)
+        end
+
+    end
+
+    %no images have been uploaded
+else
+    fprintf('Uploading from the beginning...')
+    %cf_im_list = zeros([img_num, 1]);
+    animal_sum.confocal_imid = zeros([img_num, 1]);
+    animal_sum.cell_id_list = zeros([img_num, 1]);
+    subfds = dir(confocal_fd);
+    %cell_id_list = zeros([img_num, 1]);
+    for i = 1:img_num
+        cf_indv_folder = fullfile(confocal_fd, subfds(i));
+        %cf_indv_folder = fullfile(confocal_fd, cf_indv_folder(i));  
+        %sln_image.loadFolder(cf_indv_folder);
+        allfiles = dir(cf_indv_folder);
+        for k = 1:numel(allfiles)
+            nd2fn  = 0;
+            if (endsWith(allfiles(k), '.nd2') & (nd2fn ==0))
+               fprintf('uploaing image: %s', allfiles(k));
+                fullpath = fullfile(cf_indv_folder, allfiles(k));
+                %uploading image
+                sln_image.Image.LoadFromFilewithStructuralInput(fullpath, user, scope_name, types_channel, z_step, false);              
+                fileinfo = dir(fullpath);
+                match = sln_image.Image.get_db_match(fileinfo);
+                matched_data = fetch(match);
+                animal_sum.confocal_imid(i) = matched_data.image_id;
+                nd2fn = nd2fn+1;
+
+                %creating cell and link it to the file
+                
+            elseif(endsWith(allfiles(k), '.nd2') & (nd2fn >0))
+                error('More than nd2 files found in folder: %s\n', cf_indv_folder);
+
+            elseif(endsWith(allfiles(k), 'txt') & nd2fn == 0)
+                %the cell is in the format of link to another image
+                tokens = regexp(allfiles(k), 'link_to_(.*)\.txt', 'tokens');
+                extractedStr = tokens{1}{1};
+                query = {};
+                query.filename = extractedStr;
+                query.scope_name =  scope_name;
+                query.user_name = user;
+
+                dbmatch = fetch(sln_image.Image & query);
+                
+            end
+
+
+
+            if (nd2fn == 0)
+                warning('No .nd2 files found in folder: %s\n', cf_indv_folder);
+            end
+
+            animal_sum.cell_id_list(i) = find_multicell_in1im(animal_sum.confocal_imid(i));
+          
+        end
+    end
+    fprintf('uploading finished!')
+end
+
+end

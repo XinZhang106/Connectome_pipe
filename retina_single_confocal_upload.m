@@ -1,0 +1,115 @@
+function [image_id, cell_unid] = retina_single_confocal_upload(animal_id, folder, side, user, z_step, scope_name, types_channel)
+%UNTITLED4 Summary of this function goes here
+%upload the RGC confocal images to the DJ sln_image and link to a newly created cell by using the function sln_image.loadFolder
+%also save a mini Z stack preview to the folder visualizer for future plotting.
+arguments
+    %this is the defualt setting of confocal RGC imaging, if anything is changed, variables need to be specified
+    animal_id 
+    folder
+    side = 'Left'
+    user = 'Xin'
+    z_step = 0.225
+    scope_name ='Confocal_B'
+    types_channel  = {3, 2}   
+end
+
+allfiles = dir(folder);
+allfiles = allfiles(~[allfiles.isdir]);
+for k = 1:numel(allfiles)
+    nd2fn  = 0;
+    fname = allfiles(k).name;
+    if (endsWith(fname, '.nd2') & (nd2fn ==0))
+        fprintf('uploaing image: %s\n', fname);
+        fullpath = fullfile(folder, fname);
+        fileinfo = dir(fullpath);
+        %check if this image is already uploaded to the image table
+        match = sln_image.Image.get_db_match_nodaterestrict(fileinfo);
+        matched_im = fetch(match);
+
+        if (~isempty(matched_im))
+            image_id = matched_im.image_id;
+            fprintf('This image already exists in the database, skipping uploading....\n');
+            %search if also in cell image association table
+            %imid = fetch(math);
+            query = {};
+            query.image_id = imid.image_id;
+            match_asso = fetch(sln_image.RetinalCellImage & query);
+            if (~isempty(match_asso))
+                fprintf('This image is also linked to cell: %d\n', match_asso.cell_unid);
+                cell_unid = match_asso.cell_unid;
+                return;
+            else
+                fprintf('Image not found to link to any cell, creating the link...\n');
+                %creating a cell for the image
+                cell_unid = sln_cell.Cell.insert_get_id(animal_id);
+                %assign this cell to be a retinalcell
+                rc = {};
+                rc.cell_unid = cell_unid;
+                rc.side = side;
+                insert(sln_cell.RetinalCell, rc);
+                fprintf('creating a cell entry for the image: %d\n', cell_unid);
+
+                %creating the image cell association
+                rc = rmfield(rc, 'side');
+                rc = rmfield(rc, 'animal_id');
+                rc.image_id = image_id;
+                insert(sln_image.RetinalCellImage, rc);
+                fprintf('Cell inserted into sln_image.RetinalCellImage\n');
+            end
+        else
+             fprintf('No image found in the database, uploading now...\n');
+            %uploading image
+            sln_image.Image.LoadFromFilewithStructuralInput(fullpath, user, scope_name, types_channel, z_step, false);
+            match = sln_image.Image.get_db_match(fileinfo);
+            matched_data = fetch(match);
+            image_id = matched_data.image_id;
+            fprintf('Image uploaded, id  %d\n', image_id);
+
+            nd2fn = nd2fn+1;
+            %creating cell and link it to the file
+            id = sln_cell.Cell.insert_get_id(animal_id);
+            cell_unid = id;
+            asso.cell_unid = id;
+            %assign this cell to retinalcell table
+            asso.side = side;
+            asso.animal_id = animal_id;
+            insert(sln_cell.RetinalCell, asso);
+
+            asso = rmfield(asso, 'side');
+            asso.image_id = matched_data.image_id;
+            insert(sln_image.RetinalCellImage, asso);
+        end
+
+    elseif(endsWith(allfiles(k), '.nd2') & (nd2fn >0))
+        error('More than nd2 files found in folder: %s\n', cf_indv_folder);
+
+    elseif(endsWith(allfiles(k), 'txt') & nd2fn == 0)
+        %the cell is in the format of link to another image
+        tokens = regexp(allfiles(k), 'link_to_(.*)\.txt', 'tokens');
+        extractedStr = tokens{1}{1};
+        query = {};
+        query.filename = extractedStr;
+        query.scope_name =  scope_name;
+        query.user_name = user;
+
+        dbmatch_link = fetch(sln_image.Image & query);
+        if (numel(dbmatch_link) == 1)
+            fprintf('Match found for this folder: %s\n', allfiles(k));
+            %creating linked cell
+            cell_unid = sln_cell.Cell.insert_get_id(animal_id);
+            image_id = dbmatch_link.image_id;
+
+        elseif(numel(dbmatch_link)>1)
+            error('Multiple images found for this name, please manually insert the sln_image.RetinalCellImage.\n');      
+        else
+            error('No images found for folder %s, check your link txt files. \n', allfiles(k));
+        end
+    end
+    if (nd2fn == 0)
+        warning('No .nd2 files found in folder: %s\n', folder);
+    end
+end
+
+
+
+
