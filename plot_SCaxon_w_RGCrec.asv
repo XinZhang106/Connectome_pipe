@@ -1,0 +1,59 @@
+function plot_SCaxon_w_RGCrec(animal_id)
+%Using the animal DJID, plotting the SC axons and rgc in reconstructed retina
+%   Detailed explanation goes here
+
+%check if the recon exisits in database
+reconkey.animal_id = animal_id;
+recondata = fetch(sln_tissue.RetinaRecon & reconkey, "*");
+if (isempty(recondata))
+    error('No reconstruction data found!\n');
+end
+
+%check if axon exists
+axonkey.animal_id = animal_id;
+axonkey.brain_region = 'SCs';
+axondata = fetch(sln_cell.Cell * sln_cell.Axon & axonkey, '*');
+if (isempty(axondata))
+    error('No SC axon found for this mouse!\n');
+end
+
+%start plotting
+figure;
+hold on;
+set(gcf, 'Units','normalized', 'Position', [0.2 0.2 0.6 0.35] );
+%plot reconstructed retina in subplot 1
+ax1 = subplots(1,2,1);
+rgc_reproj = recondata.reproj;
+scatter(ax1, rgc_reproj(:, 1), rgc_reproj(:, 2),25, 'red', 'filled');
+for i = 1:numel(recondata.cell_ids)
+    text(ax1, rgc_reproj(i, 1), rgc_reproj(i, 2)+0.1, str(recondata.cell_ids(i)));
+end
+%add some concentric circles in the plot to make it more authentic
+r_max = 2;
+n_circles = 5;
+radii = linspace(r_max/n_circles, r_max, n_circles);
+
+theta = linspace(0, 2*pi, 400);
+for r = radii
+    x = r * cos(theta);
+    y = r * sin(theta);
+    plot(ax1, x, y, 'k--', 'LineWidth', 0.1)
+end
+
+ax1.XTick = [-2.2 2.2];
+ax1.XTickLabel = {'T', 'N'};
+ax1.YTick = [-2.2 2.2];
+ax1.YTickLabel = {'V', 'D'};
+titel(ax1, 'Retina reconstruction');
+
+%now make the SC plot
+ax2 =  subplots(1,2,2);
+axon_x = [axondata.anterior_posterior];
+axon_y = [axondata.medial_lateral];
+sz = 25;
+scatter(ax2, axon_x, axon_y, sz, 'blue', 'filled');
+for j = 1:numel(axon_data)
+    text(ax2, axon_x(j), axon_y(j)+50, str(axon_data(j).axon_id));
+end
+
+end

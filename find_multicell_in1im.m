@@ -1,5 +1,6 @@
 function cell_id = find_multicell_in1im(image_id)
 %Dealing with situation in sln_image.RetinalCellImage where multiple cells are linked to the same image
+%not in use currently
 fptintf('Searching for cells linked to image %d:....\n', image_id);
 q.image_id = image_id;
 cells = fetch(sln_image.RetinalCellImage & q);

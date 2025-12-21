@@ -1,6 +1,6 @@
 function sucess = initialize_animal(animal_id, eyeside, slice_ori, slice_thick, owner)
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+%Initialize folder structure for a connectome animal image data
+%including creating tissue entries
 sucess = 0;
 
 %DJ records saved on

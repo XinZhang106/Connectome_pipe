@@ -76,6 +76,7 @@ for k = 1:numel(allfiles)
             insert(sln_cell.RetinalCell, asso);
 
             asso = rmfield(asso, 'side');
+            asso= rmfield(asso, 'animal_id');
             asso.image_id = matched_data.image_id;
             insert(sln_image.RetinalCellImage, asso);
         end
