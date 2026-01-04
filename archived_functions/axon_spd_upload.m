@@ -109,29 +109,29 @@
     
         %TODO finish sln_image.AxonInBrain uploading part
         %insert the image to table sln_image.AxonInBrain
-        fprintf('Now inserting to table sln_image.AxonInBrain....\n');
-        ml_idx = find(strcmp(img_keys, 'ml'));
-        ap_idx = find(strcmp(img_keys, 'ap'));
-        if (isempty(ml_idx) || isempty(ap_idx))
-            fprintf('Either ml or ap not in the info.txt file. please check...\n');
-        else
-            ml = str2double( img_values{ml_idx});
-            ap = str2double( img_values{ap_idx});
-            image_idx = find(strcmp(img_keys, 'image_id'));
-            if (isempty(image_idx))
-                image_id = this_id;
-            else
-                image_id = str2double(img_values(image_idx));
-            end
-            wholebrain_idx = find(strcmp(img_keys, 'ref_image_id'));
-            wholebrain_id =str2double(img_values(wholebrain_idx));
-            cx_idx = find(strcmp(img_keys, 'centroid_x'));
-            cx = str2double(img_values(cx_idx));
-            cy_idx = find(strcmp(img_keys, 'centroid_y'));
-            cy =str2double( img_values(cy_idx));
-            background = fullfile(folder, 'background.roi');
-            mask = fullfile(folder, 'mask.tif');
-            
-            sln_image.AxonInBrain.assign_axon_in_brain(image_id, wholebrain_id,cx, cy, 100, background, mask, ml, ap);
-        end
-end
+%         fprintf('Now inserting to table sln_image.AxonInBrain....\n');
+%         ml_idx = find(strcmp(img_keys, 'ml'));
+%         ap_idx = find(strcmp(img_keys, 'ap'));
+%         if (isempty(ml_idx) || isempty(ap_idx))
+%             fprintf('Either ml or ap not in the info.txt file. please check...\n');
+%         else
+%             ml = str2double( img_values{ml_idx});
+%             ap = str2double( img_values{ap_idx});
+%             image_idx = find(strcmp(img_keys, 'image_id'));
+%             if (isempty(image_idx))
+%                 image_id = this_id;
+%             else
+%                 image_id = str2double(img_values(image_idx));
+%             end
+%             wholebrain_idx = find(strcmp(img_keys, 'ref_image_id'));
+%             wholebrain_id =str2double(img_values(wholebrain_idx));
+%             cx_idx = find(strcmp(img_keys, 'centroid_x'));
+%             cx = str2double(img_values(cx_idx));
+%             cy_idx = find(strcmp(img_keys, 'centroid_y'));
+%             cy =str2double( img_values(cy_idx));
+%             background = fullfile(folder, 'background.roi');
+%             mask = fullfile(folder, 'mask.tif');
+% 
+%             sln_image.AxonInBrain.assign_axon_in_brain(image_id, wholebrain_id,cx, cy, 100, background, mask, ml, ap);
+%         end
+% end
