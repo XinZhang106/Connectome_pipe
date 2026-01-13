@@ -81,10 +81,10 @@ for k = 1:numel(allfiles)
             insert(sln_image.RetinalCellImage, asso);
         end
 
-    elseif(endsWith(allfiles(k), '.nd2') & (nd2fn >0))
+    elseif(endsWith(allfiles(k).name, '.nd2') & (nd2fn >0))
         error('More than nd2 files found in folder: %s\n', cf_indv_folder);
 
-    elseif(endsWith(allfiles(k), 'txt') & nd2fn == 0)
+    elseif(endsWith(allfiles(k).name, 'txt') & nd2fn == 0)
         %the cell is in the format of link to another image
         tokens = regexp(allfiles(k), 'link_to_(.*)\.txt', 'tokens');
         extractedStr = tokens{1}{1};

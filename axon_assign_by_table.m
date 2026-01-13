@@ -63,7 +63,7 @@ for j = 1:height(axon_table)
         end
 
         if (~all([mask background]))
-            error('Either mask or background cannot be found for %s\n', axon_table.image_folder(j));
+            error('Either mask or background cannot be found for %s\n', axon_table.image_folder(j).name);
         end
 
         centroid = [axon_table.centroid_x(j) axon_table.centroid_y(j)];

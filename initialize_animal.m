@@ -18,7 +18,7 @@ retina_key.animal_id = animal_id;
 retina_insert = fetch(sln_tissue.Retina & retina_key);
 if (isempty(retina_insert))
     retina_key.tissue_id = sln_tissue.Retina.add_new_retina(owner, eyeside, animal_id);
-    fprintf('Retina inserted in sln_tissue.Retina!');
+    %fprintf('Retina inserted in sln_tissue.Retina!');
 else
     retina_key.tissue_id = retina_insert.tissue_id;
     fprintf('Retina already in DJ, skipping...\n');

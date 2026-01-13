@@ -17,6 +17,13 @@ if (isempty(axondata))
     error('No SC axon found for this mouse!\n');
 end
 
+%adding axon for SCig
+axonkey.brain_region = 'SCig';
+igdata = fetch(sln_cell.Cell * sln_cell.Axon & axonkey, '*');
+if (~isempty(igdata))
+    axondata = [axondata; igdata];
+end
+
 %start plotting
 figure;
 hold on;
