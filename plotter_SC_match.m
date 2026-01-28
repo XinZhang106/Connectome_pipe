@@ -79,7 +79,6 @@ if (fig_handle == 0)
     axis(ax1, 'square');
     ylim(ax1, [0,1600])
     hold off;
-    
 
 
     %plot the retina recon with azimuth equal-distance projection
