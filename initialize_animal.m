@@ -1,6 +1,10 @@
 function sucess = initialize_animal(animal_id, eyeside, slice_ori, slice_thick, owner)
-%Initialize folder structure for a connectome animal image data
-%including creating tissue entries
+%Initialize folder structure for a connectome animal image data and create tissue entries for the new animal
+% animal_id: the DJID of the mouse
+% eyeside: the injected side of the eye
+%slice_ori: if the brain slice is made in coronal or saggital orientation
+%slice_thick: the thickness of the brain slice, unit is micron
+%owner: who is doing this experiment
 sucess = 0;
 
 %DJ records saved on
