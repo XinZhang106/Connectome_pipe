@@ -1,5 +1,5 @@
 animal_id = 4088;
-buffer_folder ="D:\programming\githubRepos\Connectome_pipe\test\pixel\pixel_filtered\top10";
+buffer_folder ="D:\localData\trace_pipe_DJ\4088\test\pixel\pixel_filtered\interQt";
 
 %plotting start
 marker_selection = ["+", "*", "<", 'x', ".", "pentagram", "hexgram"];
@@ -16,6 +16,8 @@ fprintf('Total axonal image number %d\n', numel(cfs));
 %figure_handle = figure; % Create a new figure if none is provided
 sum_data.image_id = zeros([numel(cfs), 1]);
 sum_data.cmass = zeros([numel(cfs), 3]);
+mean_to_norm = zeros([numel(cfs), 2]);
+norm_to_mean = zeros([numel(cfs), 2]);
 mylegend = cell(numel(cfs, 1));
 for i = 1:numel(cfs)
     %read table
@@ -35,29 +37,33 @@ for i = 1:numel(cfs)
 
 
     % Plot the axon color for the current image
-    scatter3(tdata.c1, tdata.c2, tdata.c3, 20, 'Marker', this_marker, 'MarkerFaceAlpha', 0.01, 'MarkerEdgeAlpha',0.01, ...
-        'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :), ...
-        'HandleVisibility', 'off');
+    % scatter3(tdata.c1, tdata.c2, tdata.c3, 20, 'Marker', this_marker, 'MarkerFaceAlpha', 0.01, 'MarkerEdgeAlpha',0.01, ...
+    %     'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :), ...
+    %     'HandleVisibility', 'off');
+    A = table2array(tdata);
+    A_filtered = A(~any(A == 0, 2), :);
 
-    % x = tdata.c1./tdata.c3;
-    % y = tdata.c2./tdata.c3;
+    norm_to_mean(i, 1) = mean(A_filtered(:, 1)./A_filtered(:, 3), 'all');
+    norm_to_mean(i, 2) = mean(A_filtered(:, 2)./A_filtered(:, 3), 'all');
     % scatter(x, y, 'Marker', this_marker, 'MarkerFaceAlpha', 0.3, 'MarkerEdgeAlpha',0.1, ...
     %     'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :), 'HandleVisibility', 'off');
     sum_data.image_id(i) = image_id;
-    sum_data.cmass(i, 1) = mean(tdata.c1, "all");
-    sum_data.cmass(i, 2) = mean(tdata.c2, "all");
-    sum_data.cmass(i, 3) = mean(tdata.c3, "all");
+    sum_data.cmass(i, 1) = mean(A_filtered(:, 1), "all");
+    sum_data.cmass(i, 2) = mean(A_filtered(:, 2), "all");
+    sum_data.cmass(i, 3) = mean(A_filtered(:, 3), 'all');
+    mean_to_norm(i, 1) = sum_data.cmass(i, 1)/sum_data.cmass(i, 3);
+    mean_to_norm(i, 2) = sum_data.cmass(i, 2)/sum_data.cmass(i, 3);
+
     l =  sprintf('im %d -- axon %d', image_id, all_axons(axon_idx).axon_id);
     mylegend{i} = l;
 end
 
 
 for i = 1:numel(cfs)
+    scatter(mean_to_norm(i, 1), mean_to_norm(i, 2), 'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :));
+    % scatter3(sum_data.cmass(i, 1), sum_data.cmass(i,2), sum_data.cmass(i,3),50, ...
+    %     'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :));
 
-    scatter3(sum_data.cmass(i, 1), sum_data.cmass(i,2), sum_data.cmass(i,3),50, ...
-        'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :));
-    % scatter(sum_data.cmass(i, 1)/sum_data.cmass(i, 3), sum_data.cmass(i, 2)/sum_data.cmass(i, 3), ...
-    %     50, 'MarkerFaceColor', colors(i, :), 'MarkerEdgeColor', colors(i, :));
 end
 legend(mylegend);
 %output marker for each brain region

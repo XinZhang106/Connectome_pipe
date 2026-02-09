@@ -1,7 +1,10 @@
 function [image_id, cell_unid] = retina_single_confocal_upload(animal_id, folder, side, user, z_step, scope_name, types_channel)
-%UNTITLED4 Summary of this function goes here
+%This function upload a single confocal (NOT SPINNING DISK) image for retina ganglion cell classification
 %upload the RGC confocal images to the DJ sln_image and link to a newly created cell by using the function sln_image.loadFolder
-%also save a mini Z stack preview to the folder visualizer for future plotting.
+%animal_id: DJID of the mouse; folder: folder the image or link file is located; side: which eye; user:who takes the image;
+%z-step: the step size of the confocal image, unit micron. In 40X of GaASP max FoV it is 0.225;
+%scope name: usually confocal_B, but other confocal scope is fine too
+%types_channel: usualy {3,2} for 3-cell fill/viral trace and 2-chat bands. Changeable.
 arguments
     %this is the defualt setting of confocal RGC imaging, if anything is changed, variables need to be specified
     animal_id 
