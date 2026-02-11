@@ -1,4 +1,8 @@
 function [whole_brain_ids, whole_brain_fnames] = uploading_whole_brain(folder, tissue_id)
+%This function make entries of the whole brain images of a certain mouse, note that the whole brain images 
+%are NOT SAVED to the DJ_schwartz lab. Please keep the original images in the server /images_by_animal
+% folder: the folder where whole brain images are stored
+% tissue_id: the dj tissue id of the brain slice
 whole_folder = folder;
 files = dir(whole_folder);
 files = files(~[files.isdir]);
