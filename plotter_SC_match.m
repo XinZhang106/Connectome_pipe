@@ -50,7 +50,7 @@ if (fig_handle == 0)
         y = [ipdata.medial_lateral];
         scatter(ax1, x, y, 'filled');
         for i=1:numel(x)
-            text(ax1, x(i), y(i)+10, strcmp(ipdata(i).axon_id));
+            text(ax1, x(i), y(i)+10, num2str(ipdata(i).axon_id));
         end
     legend(ax1, {'Contralateral', 'Ipsilateral'});
     end
