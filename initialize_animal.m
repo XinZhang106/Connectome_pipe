@@ -8,7 +8,7 @@ function sucess = initialize_animal(animal_id, eyeside, slice_ori, slice_thick, 
 sucess = 0;
 
 %DJ records saved on
-basefd = "D:\localData\trace_pipe_DJ";
+basefd ="H:\Data_connectome\trace_pipe_DJ";
 animal_fd = fullfile(basefd, string(animal_id));
 
 if (isfolder(animal_fd))

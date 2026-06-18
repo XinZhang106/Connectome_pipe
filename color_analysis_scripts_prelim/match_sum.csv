@@ -1,0 +1,27 @@
+cell_unid,axon_id,animal_id,brain_region,side,cell_type
+10752,17,3658,SCs,Contralateral,ON alpha
+10753,18,3658,SCs,Contralateral,unknown
+10754,23,3658,SCs,Contralateral,ON-OFF DS - direction unknown
+10756,19,3658,SCs,Contralateral,ON vertical OS large RF
+10879,5,4088,SCs,Contralateral,OFF sustained EW1no
+10880,2,4088,SCs,Contralateral,ON bursty
+10882,4,4088,SCs,Contralateral,ON small OFF large
+10883,1,4088,SCs,Contralateral,OFF medium sustained
+10886,7,4090,SCs,Contralateral,unknown
+11206,33,4109,NOT,Ipsilateral,ON-OFF DS - direction unknown
+11206,35,4109,NOT,Ipsilateral,ON-OFF DS - direction unknown
+11207,32,4109,dLGN,Ipsilateral,ON alpha
+11208,31,4109,SCs,Contralateral,PixON
+11210,30,4109,SCs,Contralateral,ON DS sustained - direction unknown
+11211,43,4111,dLGN,Contralateral,ON alpha
+11212,40,4111,OPN,Contralateral,OFF transient small RF
+11213,45,4111,SCs,Contralateral,ON-OFF DS - direction unknown
+11214,51,4111,vLGN,Contralateral,F-mini-ON
+11215,44,4111,dLGN,Contralateral,ON DS sustained - direction unknown
+11245,50,4086,dLGN,Contralateral,ON DS sustained - direction unknown
+11246,48,4086,OPN,Contralateral,ON alpha
+11249,49,4086,dLGN,Contralateral,unknown
+11250,47,4086,vLGN,Contralateral,OFF horizontal OS - symmetric
+11260,55,4087,dLGN,Ipsilateral,ON horizontal OS small RF
+11261,54,4087,vLGN,Contralateral,ON bursty
+11262,53,4087,SCs,Ipsilateral,OFF horizontal OS - symmetric
