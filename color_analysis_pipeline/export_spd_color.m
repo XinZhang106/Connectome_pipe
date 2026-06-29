@@ -58,6 +58,7 @@ else
         colorbuf = image_datas(i).color_pixel;
         if (~if_pixel) %calculating average color of every frame
             cbf = zeros([numel(colorbuf), 3]);
+            framindx = [];
             for j = 1:numel(colorbuf) %number of frames
                 bufbuf = colorbuf{j};
                 if (~isempty(bufbuf))
@@ -71,16 +72,21 @@ else
         else
             %export the pixel value
             cbf = [];
+            framindx = [];
             for j = 1:numel(colorbuf)
                 if (isempty(cbf))
                     cbf = colorbuf{j};
+                    pixelnum = height(cbf);
+                    framindx = repmat(j, pixelnum, 1);
                 else
                     cbf = [cbf; colorbuf{j}];
+                    pixelnum = height(colorbuf{j});
+                    framindx = [framindx; repmat(j, pixelnum, 1)];
                 end
             end
         end
         % Save the color data to a table
-        colorTable = array2table(cbf, 'VariableNames', {'c1', 'c2', 'c3'});
+        colorTable = array2table([cbf framindx], 'VariableNames', {'c1', 'c2', 'c3', 'fr'});
         if (if_pixel)
             outputFile = fullfile(out_folder, sprintf('%d_rgc_color_pixeldata.csv', image_datas(i).image_id));
         else
