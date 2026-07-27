@@ -31,6 +31,7 @@ function results = match_permute(X_rgc, Y_axon, w)
     nP = size(P, 1);
 
     results = struct('perm', cell(nP,1), 'A', [], 'b', [], 'd', [], 'score', []);
+    fprintf('Starting permutating, total possibilities %d\n', nP);
 
     for k = 1:nP
         p  = P(k, :);
@@ -49,4 +50,5 @@ function results = match_permute(X_rgc, Y_axon, w)
         results(k).d     = d;
         results(k).score = norm(d);
     end
+    
 end
