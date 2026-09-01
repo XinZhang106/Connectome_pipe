@@ -4,8 +4,12 @@ function export_spd_color(animal_id, if_brain, if_pixel, out_folder)
 if (if_brain)
     query = sprintf('animal_id = %d', animal_id);
     fprintf('load data... it may takes a while....\n');
-    image_datas = fetch(sln_image.AxonInBrainV2 * sln_image.AxonImageAssociationV2 * sln_cell.Axon & query, ...
-        'pixel_color', 'seg_id');
+    % image_datas = fetch(sln_image.AxonInBrainV2 * sln_image.AxonImageAssociationV2 * sln_cell.Axon & query, ...
+    %     'pixel_color', 'seg_id');
+    proj_table =  sln_image.AxonInBrainV2 * ...
+        proj(sln_image.WholeBrainImage, 'ref_image_id -> whole_brain', 'tissue_id') * ...
+        sln_tissue.Tissue * sln_tissue.BrainSliceBatch & query;
+    image_datas = fetch(proj_table, 'pixel_color', 'seg_id', 'image_id');
     for i = 1:numel(image_datas)
         fprintf('exporting color data of image %d\n', image_datas(i).image_id);
         colorbuf = image_datas(i).pixel_color;

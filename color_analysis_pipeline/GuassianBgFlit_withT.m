@@ -12,7 +12,7 @@ for i = 1:numel(existingframes)
     for j = 1:channel_n
      filt_flag(:, j) = framepixelraw(:, j)>times_std * bgstd(frame, j);
     end
-    total_filt = find(all(filt_flag, 2));
+    total_filt = find(any(filt_flag, 2));
     frame_pixel_filted = framepixelraw(total_filt, :);
     filtered = [filtered; [frame_pixel_filted repmat(frame, height(frame_pixel_filted), 1)]];
 end

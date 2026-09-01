@@ -1,8 +1,16 @@
-function [bigcluster, smallcluster] = separate_2PxCluster(color_table)
+function [bigcluster, smallcluster] = separate_2PxCluster(color_table, ifc1c2)
 T = table2array(color_table);
-c1 = T(:, 1);  c2 = T(:, 2);
+if(ifc1c2)
+    c1 = T(:, 1);  c2 = T(:, 2);
+    fprintf('Separating by raw c1 and c2...\n');
+else
+    c1 = T(:, 1); c2 = T(:, 3);
+    fprintf('Separating by raw c1 and c3...\n');
+end
+
 
 % --- Feature: angle from origin ---
+
 theta = atan2(c2, c1);                       % radians
 
 % --- 2-component GMM on theta ---

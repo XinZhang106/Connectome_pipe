@@ -31,8 +31,7 @@ for i = 1:numel(files)
     if (endsWith(files(i).name, std_str))
         fprintf('Image found: %s\n', files(i).name);
         filepath = fullfile(folder, files(i).name);
-        sln_image.Image.LoadFromFilewithStructuralInput(filepath,user_name, ...
-            "Spinning Disk", channel_arr, z_scale, true);
+        sln_image.Image.LoadFromFilewithStructuralInput(filepath,user_name, "Spinning Disk", channel_arr, z_scale, true);
         %get the image id
         fileinfo = dir(filepath);
         im_match = fetch(sln_image.Image.get_db_match_nodaterestrict(fileinfo));
